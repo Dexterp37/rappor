@@ -117,7 +117,7 @@ _setup-one-case() {
   banner 'Setting up parameters and candidate files for '$test_case
 
   local case_dir=$REGTEST_BASE_DIR/$impl/$test_case
-  mkdir --verbose -p $case_dir
+  mkdir -p $case_dir
 
   # Save the "spec"
   echo "$@" > $case_dir/spec.txt
@@ -167,7 +167,7 @@ _run-one-instance() {
     < $case_dir/spec.txt
 
   local instance_dir=$case_dir/$test_instance
-  mkdir --verbose -p $instance_dir
+  mkdir -p $instance_dir
 
   banner "Generating reports (gen_reports.R)"
 
@@ -184,7 +184,7 @@ _run-one-instance() {
   else
     # TEMP hack: Make it visible to plot.
     # TODO: Fix compare_dist.R
-    ln -s -f --verbose \
+    ln -s -f \
       $PWD/$true_values \
       $instance_dir/case_true_values.csv
   fi
@@ -236,7 +236,7 @@ _run-one-instance() {
     > $instance_dir/case_counts.csv
 
   local out_dir=${instance_dir}_report
-  mkdir --verbose -p $out_dir
+  mkdir -p $out_dir
 
   # Currently, the summary file shows and aggregates timing of the inference
   # engine, which excludes R's loading time and reading of the (possibly 
@@ -256,7 +256,7 @@ _run-one-instance-logged() {
   local impl=$3
 
   local log_dir=$REGTEST_BASE_DIR/$impl/$test_case/${test_instance}_report
-  mkdir --verbose -p $log_dir
+  mkdir -p $log_dir
 
   log "Started '$test_case' (instance $test_instance) -- logging to $log_dir/log.txt"
   _run-one-instance "$@" >$log_dir/log.txt 2>&1 \
@@ -334,9 +334,9 @@ _run-tests() {
   local instances=${5:-1}
 
   local regtest_dir=$REGTEST_BASE_DIR/$impl
-  rm -r -f --verbose $regtest_dir
+  rm -rf $regtest_dir
   
-  mkdir --verbose -p $regtest_dir
+  mkdir -p $regtest_dir
 
   local func
   local processors
@@ -358,7 +358,7 @@ _run-tests() {
 
   # Generate parameters for all test cases.
   cat $cases_list \
-    | xargs -l -P $processors -- $0 _setup-one-case $impl \
+    | xargs -L 1 -P $processors -- $0 _setup-one-case $impl \
     || test-error
 
   log "Done generating parameters for all test cases"
@@ -367,7 +367,7 @@ _run-tests() {
   _setup-test-instances $instances $impl < $cases_list > $instances_list 
 
   cat $instances_list \
-    | xargs -l -P $processors -- $0 $func || test-error
+    | xargs -L 1 -P $processors -- $0 $func || test-error
 
   log "Done running all test instances"
 

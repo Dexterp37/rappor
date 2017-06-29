@@ -21,7 +21,7 @@ main() {
   local dotd=$2  # .d output name
   shift 2  # rest of args are gcc invocation
 
-  rm --verbose -f $dotd  # in case of failure?
+  rm -f $dotd  # in case of failure?
 
   # Execute the gcc -MM invocation.
   #

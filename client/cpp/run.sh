@@ -16,7 +16,7 @@ setup() {
 }
 
 init() {
-  mkdir --verbose -p _tmp
+  mkdir -p _tmp
 }
 
 rappor-sim() {

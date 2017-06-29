@@ -16,14 +16,19 @@ set -o pipefail
 set -o errexit
 
 native-packages() {
-  sudo apt-get update
+  brew update
+  #sudo apt-get update
   # - build-essential for gcc compilers, invoked while installing R packages.
   # - gfortran Fortran compiler needed for glmnet.
   # - libblas-dev needed for limSolve.
   # - python-dev is for building the fastrand extension
   #
   # NOTE: we get R 3.0.2 on Trusty.
-  sudo apt-get install build-essential gfortran libblas-dev r-base python-dev graphviz
+  brew install gcc
+  brew install cairo
+  brew install r
+  brew install graphviz
+  # sudo apt-get install build-essential gfortran libblas-dev r-base python-dev graphviz
 }
 
 r-packages() {
@@ -41,10 +46,10 @@ r-packages() {
 install-plyr-with-friends() {
   mkdir -p _tmp
   wget --directory _tmp \
-    http://cran.r-project.org/src/contrib/Archive/Rcpp/Rcpp_0.11.4.tar.gz
+    http://cran.r-project.org/src/contrib/Archive/Rcpp/Rcpp_0.12.3.tar.gz
   wget --directory _tmp \
     http://cran.r-project.org/src/contrib/Archive/plyr/plyr_1.8.1.tar.gz
-  sudo R CMD INSTALL _tmp/Rcpp_0.11.4.tar.gz
+  sudo R CMD INSTALL _tmp/Rcpp_0.12.3.tar.gz
   sudo R CMD INSTALL _tmp/plyr_1.8.1.tar.gz 
   sudo R -e \
     'install.packages(c("reshape2", "ggplot2", "data.table"), repos="http://cran.rstudio.com/")'

@@ -8,7 +8,7 @@ default : \
 
 # All intermediate files live in _tmp/
 clean :
-	rm -f --verbose _tmp/*
+	rm -f _tmp/*
 
 # Use protobuf compiler to generate .cc and .h files.  The .o and the .d depend
 # on .cc, so that is the target of this rule.

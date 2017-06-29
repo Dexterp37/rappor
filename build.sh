@@ -69,7 +69,7 @@ run-dot() {
 # Scan for TODOs.  Does this belong somewhere else?
 todo() {
   find . -name \*.py -o -name \*.R -o -name \*.sh -o -name \*.md \
-    | xargs --verbose -- grep -w TODO
+    | xargs -- grep -w TODO
 }
 
 #
@@ -97,7 +97,7 @@ fastrand() {
   pushd tests >/dev/null
   python setup.py build
   # So we can 'import _fastrand' without installing
-  ln -s --force build/*/_fastrand.so .
+  ln -s build/*/_fastrand.so .
   ./fastrand_test.py
 
   log 'fastrand built and tests PASSED'
@@ -106,7 +106,7 @@ fastrand() {
 
 cpp-client() {
   pushd client/cpp
-  mkdir --verbose -p _tmp
+  mkdir -p _tmp
   make _tmp/rappor_sim  # this builds an executable using it
   popd
 }
