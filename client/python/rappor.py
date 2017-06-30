@@ -154,7 +154,8 @@ class SecureIrrRand(object):
 
 def to_big_endian(i):
   """Convert an integer to a 4 byte big endian string.  Used for hashing."""
-  # https://docs.python.org/2/library/struct.html
+  # https://docs.p
+  # ython.org/2/library/struct.html
   # - Big Endian (>) for consistent network byte order.
   # - L means 4 bytes when using >
   return struct.pack('>L', i)
@@ -171,7 +172,7 @@ def get_bloom_bits(word, cohort, num_hashes, num_bloombits):
 
   digest = md5.digest()
 
-  # Each has is a byte, which means we could have up to 256 bit Bloom filters.
+  # Each hash is a byte, which means we could have up to 256 bit Bloom filters.
   # There are 16 bytes in an MD5, in which case we can have up to 16 hash
   # functions per Bloom filter.
   if num_hashes > len(digest):
