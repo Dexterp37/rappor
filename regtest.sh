@@ -330,7 +330,7 @@ _run-tests() {
   local spec_gen=$1
   local spec_regex="$2"  # grep -E format on the spec, can be empty
   local parallel=$3
-  local impl=${4:-"cpp"}
+  local impl=${4:-"python"}
   local instances=${5:-1}
 
   local regtest_dir=$REGTEST_BASE_DIR/$impl
@@ -396,7 +396,12 @@ run() {
 # Run tests in parallel (7+ minutes on 8 cores)
 run-all() {
   log "Running all tests. Can take a while."
-  time _run-tests $REGTEST_SPEC '^r-' T cpp
+  time _run-tests $REGTEST_SPEC '^r-' T $@
+}
+
+run-all-seq() {
+  log "Running all tests. Can take a while."
+  time _run-tests $REGTEST_SPEC '^r-' F $@
 }
 
 run-user() {

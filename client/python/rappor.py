@@ -154,8 +154,7 @@ class SecureIrrRand(object):
 
 def to_big_endian(i):
   """Convert an integer to a 4 byte big endian string.  Used for hashing."""
-  # https://docs.p
-  # ython.org/2/library/struct.html
+  # https://docs.python.org/2/library/struct.html
   # - Big Endian (>) for consistent network byte order.
   # - L means 4 bytes when using >
   return struct.pack('>L', i)

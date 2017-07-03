@@ -47,6 +47,10 @@ quick-python() {
   ./regtest.sh run-seq '^demo3' python
 }
 
+python-all() {
+  ./regtest.sh run-all-seq python
+}
+
 quick-cpp() {
   # For now we build it first.  Don't want to build it in parallel.
   ./build.sh cpp-client

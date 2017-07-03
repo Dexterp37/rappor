@@ -4,3 +4,4 @@
 _tmp
 tests/_fastrand.so
 tests/build/
+.DS_Store
