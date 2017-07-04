@@ -43,8 +43,9 @@ rappor-sim-profile() {
     | tee _tmp/profile.txt
 }
 
-quick-python() {  
-  ./regtest.sh run-seq '^'$1 python
+quick-python() {
+  local instances=${2:-1}  
+  ./regtest.sh run-seq '^'$1 python $instances
 }
 
 python-all() {

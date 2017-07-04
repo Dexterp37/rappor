@@ -174,19 +174,27 @@ _run-one-instance() {
   # the TRUE_VALUES_PATH environment variable can be used to avoid
   # generating new values every time.  NOTE: You are responsible for making
   # sure the params match!
-
-  local true_values=${TRUE_VALUES_PATH:-}
-  if test -z "$true_values"; then
-    true_values=$instance_dir/case_true_values.csv
+  local true_values=${TRUE_VALUES_PATH:-$instance_dir/case_true_values.csv}
+  if [ ! -f $true_values ]; then
     tests/gen_true_values.R $distr $num_unique_values $num_clients \
                             $values_per_client $num_cohorts \
                             $true_values
+
+    # TEMP hack: Make it visible to plot.
+    # TODO: Fix compare_dist.R
+    if [ ! -f $instance_dir/case_true_values.csv ]; then
+      ln -s -f \
+      $PWD/$true_values \
+      $instance_dir/case_true_values.csv
+    fi
   else
     # TEMP hack: Make it visible to plot.
     # TODO: Fix compare_dist.R
-    ln -s -f \
+    if [ ! -f $instance_dir/case_true_values.csv ]; then
+      ln -s -f \
       $PWD/$true_values \
       $instance_dir/case_true_values.csv
+    fi
   fi
 
   case $impl in
@@ -380,9 +388,10 @@ readonly REGTEST_SPEC=tests/regtest_spec.py
 # Run tests sequentially.  NOTE: called by demo.sh.
 run-seq() {
   local spec_regex=${1:-'^r-'}  # grep -E format on the spec
+  local instances=${2:-1}
   shift
 
-  time _run-tests $REGTEST_SPEC $spec_regex F $@
+  time _run-tests $REGTEST_SPEC $spec_regex F $@ $instances
 }
 
 # Run tests in parallel
@@ -436,6 +445,19 @@ compare-python-cpp() {
     ./regtest.sh run-seq '^demo3' 1 cpp
 
   head _tmp/{python,cpp}/demo3/1/case_reports.csv
+}
+
+#
+#
+#
+sim-python-clients(){
+  local true_values=$REGTEST_BASE_DIR/python/stable_true_values.csv
+  local instances=${2:-1}  
+
+
+  TRUE_VALUES_PATH=$true_values \
+    ./regtest.sh run-seq '^'$1 python $instances
+
 }
 
 if test $# -eq 0 ; then
