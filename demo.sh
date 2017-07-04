@@ -44,7 +44,7 @@ rappor-sim-profile() {
 }
 
 quick-python() {  
-  ./regtest.sh run-seq '^demo3' python
+  ./regtest.sh run-seq '^'$1 python
 }
 
 python-all() {
