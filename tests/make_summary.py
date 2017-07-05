@@ -7,6 +7,7 @@ See HTML skeleton in tests/regtest.html.
 import os
 import re
 import sys
+import matplotlib.pyplot as plt
 
 
 SUMMARY_ROW = """\
