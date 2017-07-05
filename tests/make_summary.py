@@ -264,27 +264,32 @@ def FormatCell1(test_case, test_instance, metrics_file, log_file, plot_file,
     return '<td>{}</td>'.format(test_case)
 
 
-def plots(metrics_lists):
+def plots(metrics_lists, base_dir):
   for k, v in metrics_lists.iteritems():
-    _makeplot(k, v)
+    _makeplot(k, v, base_dir)
 
 
-def _makeplot(title, values):
+def _makeplot(title, values, base_dir):
+  plt.figure()
   plt.title(title)
 
   vals = []
   x_legend = values.keys()
   x_legend.sort()
   for k in x_legend:
-    vals.append(values[k])
+    vals.append(np.mean(values[k]))
 
   x = range(len(vals))
   plt.xticks(x, x_legend)
+  plt.xlabel('Simulation')
+  plt.ylabel('Value')
+  plt.grid(True)
   plt.plot(x, vals)
-  plt.show()
 
+  if not os.path.exists('{}/plots'.format(base_dir)):
+    os.makedirs('{}/plots'.format(base_dir))
 
-
+  plt.savefig('{}/plots/{}.png'.format(base_dir, title))
 
 def FormatSummaryRow(metrics_lists):
   """Outputs an HTML-formatted summary row."""
@@ -399,7 +404,7 @@ def main(argv):
         if os.path.isfile(log_file):
           instances_running += 1
   
-  plots(metrics)
+  plots(metrics, base_dir)
 
   print >>output_file, FormatSummaryRow(metrics)
 
