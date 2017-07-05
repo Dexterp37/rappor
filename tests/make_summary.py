@@ -7,6 +7,7 @@ See HTML skeleton in tests/regtest.html.
 import os
 import re
 import sys
+import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -263,6 +264,28 @@ def FormatCell1(test_case, test_instance, metrics_file, log_file, plot_file,
     return '<td>{}</td>'.format(test_case)
 
 
+def plots(metrics_lists):
+  for k, v in metrics_lists.iteritems():
+    _makeplot(k, v)
+
+
+def _makeplot(title, values):
+  plt.title(title)
+
+  vals = []
+  x_legend = values.keys()
+  x_legend.sort()
+  for k in x_legend:
+    vals.append(values[k])
+
+  x = range(len(vals))
+  plt.xticks(x, x_legend)
+  plt.plot(x, vals)
+  plt.show()
+
+
+
+
 def FormatSummaryRow(metrics_lists):
   """Outputs an HTML-formatted summary row."""
   means_with_sem = {}  # SEM - standard error of the mean
@@ -375,6 +398,8 @@ def main(argv):
       else:
         if os.path.isfile(log_file):
           instances_running += 1
+  
+  plots(metrics)
 
   print >>output_file, FormatSummaryRow(metrics)
 
