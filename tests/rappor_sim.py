@@ -77,6 +77,15 @@ def CreateOptionsParser():
       '--assoc-testdata', type='int', dest='assoc_testdata', default=0,
       help='Generate association testdata from true values on stdin.')
 
+  p.add_option(
+      '--num-clients', type='int', dest='num_clients', default=10000,
+      help='Number of clients')
+
+  p.add_option(
+      '--values-per-client', type='int', dest='values_per_client', default=1,
+      help='Values per client')
+
+
   choices = ['simple', 'fast']
   p.add_option(
       '-r', type='choice', metavar='STR',
@@ -87,7 +96,7 @@ def CreateOptionsParser():
 
 
 def GenAssocTestdata(params1, params2, irr_rand, assoc_testdata_count,
-                     csv_in, csv_out):
+                     csv_in, csv_out, max_lines):
   """Read true values from csv_in and output encoded values on csv_out.
 
   Replicate assoc_testdata_count times.  First value is a string, second is a
@@ -95,6 +104,9 @@ def GenAssocTestdata(params1, params2, irr_rand, assoc_testdata_count,
   """
   rows = []
   for i, (true_value1, true_value2) in enumerate(csv_in):
+    if i > max_lines:
+      break
+
     if i == 0:
       v1_name = true_value1
       v2_name = true_value2
@@ -135,7 +147,7 @@ def GenAssocTestdata(params1, params2, irr_rand, assoc_testdata_count,
       report_index += 1
 
 
-def RapporClientSim(params, irr_rand, csv_in, csv_out):
+def RapporClientSim(params, irr_rand, csv_in, csv_out, max_lines):
   """Read true values from csv_in and output encoded values on csv_out."""
   header = ('client', 'cohort', 'bloom', 'prr', 'irr')
   csv_out.writerow(header)
@@ -145,6 +157,9 @@ def RapporClientSim(params, irr_rand, csv_in, csv_out):
   start_time = time.time()
 
   for i, (client_str, cohort_str, true_value) in enumerate(csv_in):
+    if i > max_lines:
+      break
+
     if i == 0:
       if client_str != 'client':
         raise RuntimeError('Expected client header, got %s' % client_str)
@@ -189,6 +204,11 @@ def main(argv):
   params.prob_q = opts.prob_q
   params.prob_f = opts.prob_f
 
+  num_clients = opts.num_clients
+  values_per_client = opts.values_per_client
+
+  #print "num_clients:", num_clients, " values per client:", values_per_client
+
   if opts.random_mode == 'simple':
     irr_rand = rappor.SecureIrrRand(params)
   elif opts.random_mode == 'fast':
@@ -230,9 +250,9 @@ def main(argv):
     params2.prob_f = opts.prob_f
 
     GenAssocTestdata(
-        params1, params2, irr_rand, opts.assoc_testdata, csv_in, csv_out)
+        params1, params2, irr_rand, opts.assoc_testdata, csv_in, csv_out, num_clients * values_per_client)
   else:
-    RapporClientSim(params, irr_rand, csv_in, csv_out)
+    RapporClientSim(params, irr_rand, csv_in, csv_out, num_clients * values_per_client)
 
 
 if __name__ == "__main__":

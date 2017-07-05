@@ -207,10 +207,12 @@ _run-one-instance() {
         --num-bits $num_bits \
         --num-hashes $num_hashes \
         --num-cohorts $num_cohorts \
+        --num-clients $num_clients \
+        --values-per-client $values_per_client \
         -p $p \
         -q $q \
         -f $f \
-        < $true_values \
+        <  $true_values \
         > "$instance_dir/case_reports.csv"
       ;;
       
@@ -253,7 +255,7 @@ _run-one-instance() {
   time {
     # Input prefix, output dir
     tests/compare_dist.R -t "Test case: $test_case (instance $test_instance)" \
-                         "$case_dir/case" "$instance_dir/case" $out_dir
+                         "$case_dir/case" "$instance_dir/case" $out_dir $num_clients $values_per_client
   }
 }
 
@@ -350,7 +352,7 @@ _run-tests() {
   local processors
 
   if test $parallel = F; then
-    func=_run-one-instance-logged  # output to the console
+    func=_run-one-instance  # output to the console
     processors=1
   else
     func=_run-one-instance-logged

@@ -33,7 +33,7 @@ if (is_main) {
      make_option(c("-t", "--title"), help="Plot Title")
      )
   parsed <- parse_args(OptionParser(option_list = option_list),
-                       positional_arguments = 3)  # input and output
+                       positional_arguments = 5)  # input and output
 }
 
 library(ggplot2)
@@ -103,7 +103,7 @@ RunRappor <- function(prefix_case, prefix_instance, ctx) {
   res$fit
 }
 
-LoadActual <- function(prefix_instance) {
+LoadActual <- function(prefix_instance, max_lines) {
   hist_path <- paste0(prefix_instance, '_hist.csv')  # case.csv
 
   # gen_counts.R (fast_counts mode) outputs this, since we never have true
@@ -115,6 +115,8 @@ LoadActual <- function(prefix_instance) {
   # Load ground truth into context
   input_path <- paste0(prefix_instance, '_true_values.csv')  # case.csv
   client_values <- read.csv(input_path)
+
+  client_values <- lapply(client_values,head,n=max_lines + 1) 
 
   # Create a histogram, or R "table".  Column 2 is the true value.
   t <- table(client_values$value)
@@ -241,6 +243,8 @@ main <- function(parsed) {
   input_case_prefix <- args[[1]]
   input_instance_prefix <- args[[2]]
   output_dir <- args[[3]]
+  num_clients <- as.integer(args[[4]])
+  values_per_client <- as.integer(args[[5]])
 
   # increase ggplot font size globally
   theme_set(theme_grey(base_size = 16))
@@ -250,7 +254,7 @@ main <- function(parsed) {
 
   ctx <- LoadContext(input_case_prefix)
   ctx$rappor <- RunRappor(input_case_prefix, input_instance_prefix, ctx)
-  ctx$actual <- LoadActual(input_instance_prefix)
+  ctx$actual <- LoadActual(input_instance_prefix, num_clients * values_per_client)
 
   d <- CompareRapporVsActual(ctx)
   p <- PlotAll(d$plot_data, options$title)

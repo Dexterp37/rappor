@@ -18,9 +18,9 @@ DEMO = (
     # (case_name distr num_unique_values num_clients values_per_client)
     # (num_bits num_hashes num_cohorts)
     # (p q f) (num_additional regexp_to_remove)
-    ('demo1 unif    100 100000 10', '32 1 64', '0.25 0.75 0.5', '100 v[0-9]*9$'),
-    ('demo2 gauss   100 100000 10', '32 1 64', '0.25 0.75 0.5', '100 v[0-9]*9$'),
-    ('demo3 exp     100 100000 10', '32 1 64', '0.25 0.75 0.5', '100 v[0-9]*9$'),
+    ('demo1 gauss   100 100000 1', '32 1 64', '0.25 0.75 0.5', '0 NONE'),
+    ('demo2 gauss   100 1000 1', '32 1 64', '0.25 0.75 0.5', '0 NONE'),
+    ('demo3 gauss   100 10000 1', '32 1 64', '0.25 0.75 0.5', '0 NONE'),
     ('demo4 zipf1   100 100000 10', '32 1 64', '0.25 0.75 0.5', '100 v[0-9]*9$'),
     ('demo5 zipf1.5 100 100000 10', '32 1 64', '0.25 0.75 0.5', '100 v[0-9]*9$'),
 )
@@ -39,7 +39,7 @@ DISTRIBUTION_PARAMS = (
     ('small', 100, 1000000, 1),
     ('medium', 1000, 10000000, 1),
     ('large', 10000, 100000000, 1),
-    # Params for testing how varying the number of clients affects
+    # Params for testing how varying the number of clients affects the results
     ('clients1', 1000, 1000000, 1),
     ('clients2', 1000, 10000, 1),
     ('clients3', 1000, 1000, 1),
