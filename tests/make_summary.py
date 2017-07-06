@@ -280,10 +280,13 @@ def _makeplot(title, values, base_dir):
     vals.append(np.mean(values[k]))
 
   x = range(len(vals))
+  fig, ax = plt.subplots(1)
+  fig.autofmt_xdate()
   plt.xticks(x, x_legend)
   plt.xlabel('Simulation')
   plt.ylabel('Value')
   plt.grid(True)
+  plt.tight_layout()
   plt.plot(x, vals)
 
   if not os.path.exists('{}/plots'.format(base_dir)):

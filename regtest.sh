@@ -393,7 +393,7 @@ run-seq() {
   local instances=${2:-1}
   shift
 
-  time _run-tests $REGTEST_SPEC $spec_regex F $@ $instances
+  time _run-tests $REGTEST_SPEC $spec_regex F python $instances
 }
 
 # Run tests in parallel

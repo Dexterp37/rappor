@@ -40,10 +40,11 @@ DISTRIBUTION_PARAMS = (
     ('medium', 1000, 10000000, 1),
     ('large', 10000, 100000000, 1),
     # Params for testing how varying the number of clients affects the results
-    ('clients1', 1000, 1000000, 1),
-    ('clients2', 1000, 10000, 1),
-    ('clients3', 1000, 1000, 1),
-    ('clients4', 1000, 100, 1),
+    ('clients1', 100, 10000000, 1),
+    ('clients2', 100, 1000000, 1),
+    ('clients3', 100, 100000, 1),
+    ('clients4', 100, 10000, 1),
+    ('clients5', 100, 1000, 1),
 
 )
 
