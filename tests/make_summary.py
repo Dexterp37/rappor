@@ -10,7 +10,6 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 SUMMARY_ROW = """\
 <tfoot style="font-weight: bold; text-align: right">
 <tr>
@@ -63,6 +62,35 @@ DETAILS = """\
 <p>
 <a href="%(instance_dir)s">%(name)s files</a>
 </p>
+"""
+
+# Plots comparing simulations
+
+PLOTS = """ \
+
+<h2>Plots</h2>
+
+<p style="text-align: center">
+  <img src="plots/tv.png"/>
+</p>
+
+<p style="text-align: center">
+  <img src="plots/fnr.png"/>
+</p>
+
+<p style="text-align: center">
+  <img src="plots/fpr.png"/>
+</p>
+
+<p style="text-align: center">
+  <img src="plots/am.png"/>
+</p>
+
+<p style="text-align: center">
+  <img src="plots/time.png"/>
+</p>
+
+
 """
 
 
@@ -421,6 +449,7 @@ def main(argv):
   else:
     print >>output_file, ('<p>Too many tests to include plots. '
                           'Click links within rows for details.</p>')
+  print >>output_file, PLOTS
 
   print ('Instances'
          ' succeeded: {}  failed: {}  running: {}  total: {}'.
