@@ -45,21 +45,35 @@ DISTRIBUTION_PARAMS = (
     ('clients3', 100, 100000, 1),
     ('clients4', 100, 10000, 1),
     ('clients5', 100, 1000, 1),
+    # Params for testing the number of unique values
+    ('unique1', 10, 1000000, 1),
+    ('unique2', 100, 1000000, 1),
+    ('unique3', 1000, 1000000, 1),
+    # ...
+
 
 )
 
 # 'k, h, m' as in params file.
 BLOOMFILTER_PARAMS = {
-    '8x16': (8, 2, 16),  # 16 cohorts, 8 bits each, 2 bits set in each
-    '8x32': (8, 2, 32),  # 32 cohorts, 8 bits each, 2 bits set in each
-    '8x128': (8, 2, 128),  # 128 cohorts, 8 bits each, 2 bits set in each
-    '128x128': (128, 2, 128),  # 8 cohorts, 128 bits each, 2 bits set in each
+    '8x16x2': (8, 2, 16),  # 16 cohorts, 8 bits each, 2 bits set in each
+    '8x32x2': (8, 2, 32),  # 32 cohorts, 8 bits each, 2 bits set in each
+    '8x128x2': (8, 2, 128),  # 128 cohorts, 8 bits each, 2 bits set in each
+    '128x8x2': (128, 2, 8),  # 8 cohorts, 128 bits each, 2 bits set in each
+
+    # params for testing the size of the bloom filter
+
+
+    # params for testing the number of hash functions
+
 }
 
 # 'p, q, f' as in params file.
 PRIVACY_PARAMS = {
-    'eps_1_1': (0.39, 0.61, 0.45),  # eps_1 = 1, eps_inf = 5:
-    'eps_1_5': (0.225, 0.775, 0.0),  # eps_1 = 5, no eps_inf
+    'params1': (0.39, 0.61, 0.45),  # eps_1 = 1, eps_inf = 5:
+    'params2': (0.225, 0.775, 0.0),  # eps_1 = 5, no eps_inf
+    'params3': (0.75, 0.5, 0.75), 
+
 }
 
 # For deriving candidates from true inputs.
@@ -72,11 +86,30 @@ MAP_REGEX_MISSING = {
 #   (name modifier, Bloom filter, privacy params, fraction of extra,
 #    regex missing)
 TEST_CONFIGS = [
-    ('typical', '8x128', 'eps_1_1', .2, '10%'),
-    ('sharp', '8x128', 'eps_1_1', .0, 'sharp'),  # no extra candidates
-    ('loose', '8x128', 'eps_1_5', .2, '10%'),  # loose privacy
-    ('over_x2', '8x128', 'eps_1_1', 2.0, '10%'),  # overshoot by x2
-    ('over_x10', '8x128', 'eps_1_1', 10.0, '10%'),  # overshoot by x10
+    ('typical', '8x128x2', 'params1', .2, '10%'),
+    ('sharp', '8x128x2', 'params1', .0, 'sharp'),  # no extra candidates
+    ('loose', '8x128x2', 'params2', .2, '10%'),  # loose privacy
+    ('over_x2', '8x128x2', 'params1', 2.0, '10%'),  # overshoot by x2
+    ('over_x10', '8x128x2', 'params1', 10.0, '10%'),  # overshoot by x10
+    # configuration for testing the number of clients
+    ('sharp2', '8x128x2', 'params3', .0, 'sharp'),
+    # configuration for testing the bloom filter size
+    ('sim_bloom_filter1', '8x128x2', 'params3', .0, 'sharp'),
+    # ...
+    # configuration for testing the number of unique values
+    ('sim_unique_values', '8x128x2', 'params3', .0, 'sharp'),
+    # ...
+    # configuration for testing the number of hash functions
+    ('sim_hash', '8x128x2', 'params3', .0, 'sharp'),
+    # ...
+    # configuration for testing the number of cohorts
+    ('sim_cohort', '8x128x2', 'params3', .0, 'sharp'),
+    # ...
+    # configuration for testing different probabilities p, q, f
+    ('sim_probs', '8x128x2', 'params3', .0, 'sharp'),
+    # ...
+
+
 ]
 
 #

@@ -352,7 +352,7 @@ _run-tests() {
   local processors
 
   if test $parallel = F; then
-    func=_run-one-instance  # output to the console
+    func=_run-one-instance-logged 
     processors=1
   else
     func=_run-one-instance-logged
