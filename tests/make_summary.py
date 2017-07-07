@@ -70,22 +70,27 @@ PLOTS = """ \
 
 <h2>Plots</h2>
 
+<h3 style="text-align: center">Total variation distance</h3>
 <p style="text-align: center">
   <img src="plots/tv.png"/>
 </p>
 
+<h3 style="text-align: center">False negative rate</h3>
 <p style="text-align: center">
   <img src="plots/fnr.png"/>
 </p>
 
+<h3 style="text-align: center">False positive rate</h3>
 <p style="text-align: center">
   <img src="plots/fpr.png"/>
 </p>
 
+<h3 style="text-align: center">Allocated mass</h3>
 <p style="text-align: center">
   <img src="plots/am.png"/>
 </p>
 
+<h3 style="text-align: center">Time</h3>
 <p style="text-align: center">
   <img src="plots/time.png"/>
 </p>

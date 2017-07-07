@@ -399,9 +399,10 @@ run-seq() {
 # Run tests in parallel
 run() {
   local spec_regex=${1:-'^r-'}  # grep -E format on the spec
+  local instances=${2:-1}
   shift
   
-  time _run-tests $REGTEST_SPEC $spec_regex T $@
+  time _run-tests $REGTEST_SPEC $spec_regex T python $instances
 }
 
 # Run tests in parallel (7+ minutes on 8 cores)
