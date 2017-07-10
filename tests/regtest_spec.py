@@ -46,6 +46,13 @@ DISTRIBUTION_PARAMS = (
     ('clients4', 100, 100000, 1),
     ('clients5', 100, 50000, 1),
     ('clients6', 100, 25000, 1),
+    # Params for testing how varying the number of clients affects the results
+    ('values1', 100, 25000, 400),
+    ('values2', 100, 25000, 40),
+    ('values3', 100, 25000, 20),
+    ('values4', 100, 25000, 4),
+    ('values5', 100, 25000, 2),
+    ('values6', 100, 25000, 1),
     # Params for testing the number of unique values
     ('unique1', 10, 1000000, 1),
     ('unique2', 100, 1000000, 1),
