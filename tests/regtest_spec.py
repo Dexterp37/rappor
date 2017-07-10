@@ -42,9 +42,10 @@ DISTRIBUTION_PARAMS = (
     # Params for testing how varying the number of clients affects the results
     ('clients1', 100, 10000000, 1),
     ('clients2', 100, 1000000, 1),
-    ('clients3', 100, 100000, 1),
-    ('clients4', 100, 10000, 1),
-    ('clients5', 100, 1000, 1),
+    ('clients3', 100, 500000, 1),
+    ('clients4', 100, 100000, 1),
+    ('clients5', 100, 50000, 1),
+    ('clients6', 100, 25000, 1),
     # Params for testing the number of unique values
     ('unique1', 10, 1000000, 1),
     ('unique2', 100, 1000000, 1),
@@ -62,9 +63,18 @@ BLOOMFILTER_PARAMS = {
     '128x8x2': (128, 2, 8),  # 8 cohorts, 128 bits each, 2 bits set in each
 
     # params for testing the size of the bloom filter
-
+    '8x128x1' : (8, 1, 128),
+    '8x128x2' : (8, 2, 128),
+    '8x128x4' : (8, 4, 128),
+    '8x128x8' : (8, 8, 128),
 
     # params for testing the number of hash functions
+
+    # params for testing the number of cohorts
+    '128x16x2': (128, 2, 8),  # 8 cohorts, 128 bits each, 2 bits set in each
+    '128x32x2': (128, 2, 8),  # 8 cohorts, 128 bits each, 2 bits set in each
+    '128x64x2': (128, 2, 8),  # 8 cohorts, 128 bits each, 2 bits set in each
+    '128x128x2': (128, 2, 8),  # 8 cohorts, 128 bits each, 2 bits set in each
 
 }
 
@@ -91,22 +101,34 @@ TEST_CONFIGS = [
     ('loose', '8x128x2', 'params2', .2, '10%'),  # loose privacy
     ('over_x2', '8x128x2', 'params1', 2.0, '10%'),  # overshoot by x2
     ('over_x10', '8x128x2', 'params1', 10.0, '10%'),  # overshoot by x10
-    # configuration for testing the number of clients
     ('sharp2', '8x128x2', 'params3', .0, 'sharp'),
+
     # configuration for testing the bloom filter size
     ('sim_bloom_filter1', '8x128x2', 'params3', .0, 'sharp'),
+    ('sim_bloom_filter2', '8x128x2', 'params3', .0, 'sharp'),
     # ...
-    # configuration for testing the number of unique values
-    ('sim_unique_values', '8x128x2', 'params3', .0, 'sharp'),
-    # ...
+
     # configuration for testing the number of hash functions
-    ('sim_hash', '8x128x2', 'params3', .0, 'sharp'),
+    ('sim_hash1', '8x128x1', 'params3', .0, 'sharp'),
+    ('sim_hash2', '8x128x2', 'params3', .0, 'sharp'),
+    ('sim_hash3', '8x128x4', 'params3', .0, 'sharp'),
+    ('sim_hash4', '8x128x8', 'params3', .0, 'sharp'),
     # ...
+
     # configuration for testing the number of cohorts
-    ('sim_cohort', '8x128x2', 'params3', .0, 'sharp'),
+    ('sim_cohort1', '128x8x2', 'params3', .0, 'sharp'),
+    ('sim_cohort2', '128x16x2', 'params3', .0, 'sharp'),
+    ('sim_cohort3', '128x32x2', 'params3', .0, 'sharp'),
+    ('sim_cohort4', '128x64x2', 'params3', .0, 'sharp'),
+    ('sim_cohort5', '128x128x2', 'params3', .0, 'sharp'),
+
+
     # ...
+
     # configuration for testing different probabilities p, q, f
-    ('sim_probs', '8x128x2', 'params3', .0, 'sharp'),
+    ('sim_probs1', '8x128x2', 'params1', .0, 'sharp'),
+    ('sim_probs2', '8x128x2', 'params2', .0, 'sharp'),
+    ('sim_probs3', '8x128x2', 'params3', .0, 'sharp'),
     # ...
 
 

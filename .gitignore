@@ -18,3 +18,4 @@ tests/build/
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+save_results.sh
