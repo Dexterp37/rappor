@@ -25,8 +25,10 @@ import hmac
 import json
 import struct
 import sys
+import os
 
 from random import SystemRandom
+from hmac_drbg import HMAC_DRBG
 
 class Error(Exception):
   pass
@@ -151,13 +153,18 @@ class SecureIrrRand(object):
     self.p_gen = _SecureRandom(params.prob_p, num_bits)
     self.q_gen = _SecureRandom(params.prob_q, num_bits)
 
+def _dump(n): 
+  s = '%x' % n
+  if len(s) & 1:
+    s = '0' + s
+  return s.decode('hex')
 
 def to_big_endian(i):
   """Convert an integer to a 4 byte big endian string.  Used for hashing."""
   # https://docs.python.org/2/library/struct.html
   # - Big Endian (>) for consistent network byte order.
   # - L means 4 bytes when using >
-  return struct.pack('>L', i)
+  return _dump(i)
 
 
 def get_bloom_bits(word, cohort, num_hashes, num_bloombits):
@@ -185,18 +192,20 @@ def get_bloom_bits(word, cohort, num_hashes, num_bloombits):
 
 
 def get_prr_masks(secret, word, prob_f, num_bits):
-  h = hmac.new(secret, word, digestmod=hashlib.sha256)
+
+  #h = hmac.new(secret, word, digestmod=hashlib.sha256)
+  h = HMAC_DRBG(os.urandom(64))
   #log('word %s, secret %s, HMAC-SHA256 %s', word, secret, h.hexdigest())
 
   # Now go through each byte
-  digest_bytes = h.digest()
-  assert len(digest_bytes) == 32
+  digest_bytes = h.generate(num_bits)
+  assert len(digest_bytes) == num_bits
 
   # Use 32 bits.  If we want 64 bits, it may be fine to generate another 32
   # bytes by repeated HMAC.  For arbitrary numbers of bytes it's probably
   # better to use the HMAC-DRBG algorithm.
   if num_bits > len(digest_bytes):
-    raise RuntimeError('%d bits is more than the max of %d', num_bits, len(d))
+    raise RuntimeError('%d bits is more than the max of %d', num_bits, len(digest_bytes))
 
   threshold128 = prob_f * 128
 
@@ -301,10 +310,13 @@ class Encoder(object):
     """
     bloom_bits = get_bloom_bits(word, self.cohort, self.params.num_hashes,
                                 self.params.num_bloombits)
+    #print word, bloom_bits
 
     bloom = 0
     for bit_to_set in bloom_bits:
       bloom |= (1 << bit_to_set)
+
+    #print bloom
 
     prr, irr = self._internal_encode_bits(bloom)
     return bloom, prr, irr
