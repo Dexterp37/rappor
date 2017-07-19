@@ -47,7 +47,7 @@ DISTRIBUTION_PARAMS = (
     ('clients4', 100, 100000, 1),
     ('clients5', 100, 50000, 1),
     ('clients6', 100, 25000, 1),
-    # Params for testing how varying the number of clients affects the results
+    # Params for testing how varying the number of values per clients affects the results
     ('values1', 100, 25000, 400),
     ('values2', 100, 25000, 40),
     ('values3', 100, 25000, 20),
@@ -56,8 +56,15 @@ DISTRIBUTION_PARAMS = (
     ('values6', 100, 25000, 1),
     # Params for testing the number of unique values
     ('unique1', 10, 1000000, 1),
-    ('unique2', 100, 1000000, 1),
-    ('unique3', 1000, 1000000, 1),
+    ('unique2', 50, 1000000, 1),
+    ('unique3', 100, 1000000, 1),
+    ('unique4', 250, 1000000, 1),
+    ('unique5', 500, 1000000, 1),
+    ('unique6', 750, 1000000, 1),
+    ('unique7', 1000, 1000000, 1),
+    ('unique8', 2000, 1000000, 1),
+    ('unique9', 5000, 1000000, 1),
+
     # ...
 
 
@@ -71,6 +78,7 @@ BLOOMFILTER_PARAMS = {
     '128x8x2': (128, 2, 8),  # 8 cohorts, 128 bits each, 2 bits set in each
     '32x64x1': (32, 1, 64), # 64 cohorts, 32 bit each, 1 bits set in each
     '32x2x1': (32, 1, 2), # 1 cohort, 32 bit each, 1 bits set in each
+    '32x64x2': (32, 2, 64), # 64 cohorts, 32 bit each, 1 bits set in each
 
 
     # params for testing the size of the bloom filter
@@ -81,6 +89,13 @@ BLOOMFILTER_PARAMS = {
     '64x32x2': (64, 2, 32),  # 32 cohorts, 64 bits each, 2 bits set in each
     '128x32x2': (128, 2, 32),  # 32 cohorts, 128 bits each, 2 bits set in each
     '256x32x2': (256, 2, 32),  # 32 cohorts, 256 bits each, 2 bits set in each
+
+    '4x128x2' :(4, 2, 128),
+    '16x128x2':(16, 2, 128),
+    '32x128x2':(32, 2, 128),
+    '64x128x2':(64, 2, 128),
+    '128x128x2':(128, 2, 128),
+    '256x128x2':(256, 2, 128),
     
     # with different number of cohorts
     '8x2x2': (8, 2, 2),  
@@ -113,6 +128,7 @@ BLOOMFILTER_PARAMS = {
     '8x128x1' : (8, 1, 128),
     '8x128x4' : (8, 4, 128),
     '8x128x8' : (8, 8, 128),
+    '8x128x16' : (8, 16, 128),
 
 
     # params for testing the number of cohorts
@@ -128,27 +144,33 @@ PRIVACY_PARAMS = {
     # default
     'params3': (0.5, 0.75, 0.0), 
 
-    # how p affects
-    'params4': (1.0, 0.5, 0.5), 
-    'params5': (0.8, 0.5, 0.5), 
-    'params6': (0.6, 0.5, 0.5), 
-    'params7': (0.4, 0.5, 0.5), 
-    'params8': (0.2, 0.5, 0.5), 
+    # hash functions (they have the equivalent to 2*ln(3) DP level when used with the correct number of hash functions)
+    'params4': (0.3, 0.7941, 0.0), # 1 hash function
+    'params5': (0.313, 0.441, 0.0), # 4 hash functions
+    'params6': (0.313, 0.37486, 0.0), # 8 hash functions
+    'params7': (0.313, 0.3436, 0.0), # 16 hash functions
 
-    # how q affects
-    'params9': (0.5, 1.0, 0.5),
-    'params10': (0.5, 0.8, 0.5),
-    'params11': (0.5, 0.6, 0.5),
-    'params12': (0.5, 0.4, 0.5),
-    'params13': (0.5, 0.2, 0.5),
+    # # how p affects
+    # 'params4': (1.0, 0.5, 0.5), 
+    # 'params5': (0.8, 0.5, 0.5), 
+    # 'params6': (0.6, 0.5, 0.5), 
+    # 'params7': (0.4, 0.5, 0.5), 
+    # 'params8': (0.2, 0.5, 0.5), 
 
-    # how f affects
-    'params14': (0.4, 0.6, 1.0), 
-    'params15': (0.4, 0.6, 0.8), 
-    'params16': (0.4, 0.6, 0.6), 
-    'params17': (0.4, 0.6, 0.4), 
-    'params18': (0.4, 0.6, 0.2), 
-    'params19': (0.4, 0.6, 0.0), 
+    # # how q affects
+    # 'params9': (0.5, 1.0, 0.5),
+    # 'params10': (0.5, 0.8, 0.5),
+    # 'params11': (0.5, 0.6, 0.5),
+    # 'params12': (0.5, 0.4, 0.5),
+    # 'params13': (0.5, 0.2, 0.5),
+
+    # # how f affects
+    # 'params14': (0.4, 0.6, 1.0), 
+    # 'params15': (0.4, 0.6, 0.8), 
+    # 'params16': (0.4, 0.6, 0.6), 
+    # 'params17': (0.4, 0.6, 0.4), 
+    # 'params18': (0.4, 0.6, 0.2), 
+    # 'params19': (0.4, 0.6, 0.0), 
 
 
 
@@ -173,6 +195,7 @@ TEST_CONFIGS = [
     ('sharp2', '8x128x2', 'params3', .0, 'sharp'),
     ('sharp3', '32x64x1', 'params3', .0, 'sharp'),
     ('sharp4', '32x2x1', 'params3', .0, 'sharp'),
+    ('sharp5', '32x64x2', 'params3', .0, 'sharp'),
 
     # configuration for testing the bloom filter size
     ('sim_bloom_filter1_1', '4x32x2', 'params3', .0, 'sharp'),
@@ -182,15 +205,15 @@ TEST_CONFIGS = [
     ('sim_bloom_filter1_5', '64x32x2', 'params3', .0, 'sharp'),
     ('sim_bloom_filter1_6', '128x32x2', 'params3', .0, 'sharp'),
     ('sim_bloom_filter1_7', '256x32x2', 'params3', .0, 'sharp'),
-     
-    # ('sim_bloom_filter2_1', '4x128x2', 'params3', .0, 'sharp'),
-    # ('sim_bloom_filter2_2', '8x128x2', 'params3', .0, 'sharp'),
-    # ('sim_bloom_filter2_3', '16x128x2', 'params3', .0, 'sharp'),
-    # ('sim_bloom_filter2_4', '32x128x2', 'params3', .0, 'sharp'),
-    # ('sim_bloom_filter2_5', '64x128x2', 'params3', .0, 'sharp'),
-    # ('sim_bloom_filter2_6', '128x128x2', 'params3', .0, 'sharp'),
-    # ('sim_bloom_filter2_7', '256x128x2', 'params3', .0, 'sharp'),
-    
+     #
+    ('sim_bloom_filter2_1', '4x128x2', 'params3', .0, 'sharp'),
+    ('sim_bloom_filter2_2', '8x128x2', 'params3', .0, 'sharp'),
+    ('sim_bloom_filter2_3', '16x128x2', 'params3', .0, 'sharp'),
+    ('sim_bloom_filter2_4', '32x128x2', 'params3', .0, 'sharp'),
+    ('sim_bloom_filter2_5', '64x128x2', 'params3', .0, 'sharp'),
+    ('sim_bloom_filter2_6', '128x128x2', 'params3', .0, 'sharp'),
+    ('sim_bloom_filter2_7', '256x128x2', 'params3', .0, 'sharp'),
+    #
     ('sim_bloom_filter3_1', '4x32x4', 'params3', .0, 'sharp'),
     ('sim_bloom_filter3_2', '8x32x4', 'params3', .0, 'sharp'),
     ('sim_bloom_filter3_3', '16x32x4', 'params3', .0, 'sharp'),
@@ -209,9 +232,11 @@ TEST_CONFIGS = [
 
     # configuration for testing the number of hash functions
     ('sim_hash1_1', '8x128x1', 'params3', .0, 'sharp'),
-    ('sim_hash1_2', '8x128x2', 'params3', .0, 'sharp'),
-    ('sim_hash1_3', '8x128x4', 'params3', .0, 'sharp'),
-    ('sim_hash1_4', '8x128x8', 'params3', .0, 'sharp'),
+    ('sim_hash1_2', '8x128x2', 'params4', .0, 'sharp'),
+    ('sim_hash1_3', '8x128x4', 'params5', .0, 'sharp'),
+    ('sim_hash1_4', '8x128x8', 'params6', .0, 'sharp'),
+    ('sim_hash1_5', '8x128x16', 'params7', .0, 'sharp'),
+
     # ...
 
     # configuration for testing the number of cohorts
@@ -228,9 +253,9 @@ TEST_CONFIGS = [
     # ...
 
     # configuration for testing different probabilities p, q, f
-    ('sim_probs1', '8x128x2', 'params1', .0, 'sharp'),
-    ('sim_probs2', '8x128x2', 'params2', .0, 'sharp'),
-    ('sim_probs3', '8x128x2', 'params3', .0, 'sharp'),
+    #('sim_probs1', '8x128x2', 'params1', .0, 'sharp'),
+    #('sim_probs2', '8x128x2', 'params2', .0, 'sharp'),
+    #('sim_probs3', '8x128x2', 'params3', .0, 'sharp'),
     # p
     # ('sim_probs4_1', '8x128x2', 'params4', .0, 'sharp'),
     # ('sim_probs4_2', '8x128x2', 'params5', .0, 'sharp'),
