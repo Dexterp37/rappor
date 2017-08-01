@@ -119,7 +119,7 @@ Directory Structure
     gh-pages/            # Where generated docs go. (A subtree of the branch gh-pages)
     regtest.sh           # End-to-end regression tests, including client
                          #  libraries and analysis
-    setup.sh             # Install dependencies (for Linux)
+    setup.sh             # Install dependencies (for MacOS)
     test.sh              # Test runner
 
 Documentation
