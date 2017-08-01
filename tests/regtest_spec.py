@@ -64,6 +64,16 @@ DISTRIBUTION_PARAMS = (
     ('unique7', 1000, 1000000, 1),
     ('unique8', 2000, 1000000, 1),
     ('unique9', 5000, 1000000, 1),
+    #
+    ('unique10', 10, 10000000, 1),
+    ('unique11', 50, 10000000, 1),
+    ('unique12', 100, 10000000, 1),
+    ('unique13', 250, 10000000, 1),
+    ('unique14', 500, 10000000, 1),
+    ('unique15', 750, 10000000, 1),
+    ('unique16', 1000, 10000000, 1),
+    ('unique17', 2000, 10000000, 1),
+    ('unique18', 5000, 10000000, 1),
 )
 
 # 'k, h, m' as in params file.
@@ -146,6 +156,10 @@ PRIVACY_PARAMS = {
     'params9': (0.3999, 0.889, 0.5), 
     'params10': (0.695, 0.9043, 0.2), 
     'params11': (0.186, 0.407, 0.0), 
+
+    #
+    'params12': (0.5, 0.75, 0.75),
+    'params13': (0.25, 0.75, 0.5),
 }
 
 # For deriving candidates from true inputs.
@@ -167,6 +181,16 @@ TEST_CONFIGS = [
     ('sharp3', '32x64x1', 'params3', .0, 'sharp'),
     ('sharp4', '32x2x1', 'params3', .0, 'sharp'),
     ('sharp5', '32x64x2', 'params3', .0, 'sharp'),
+    #
+    ('sim_extra_1_1', '8x128x2', 'params3', .0, 'sharp'),
+    ('sim_extra_1_2', '8x128x2', 'params3', .1, 'sharp'),
+    ('sim_extra_1_3', '8x128x2', 'params3', .25, 'sharp'),
+    ('sim_extra_1_4', '8x128x2', 'params3', .5, 'sharp'),
+    ('sim_extra_1_5', '8x128x2', 'params3', .75, 'sharp'),
+    ('sim_extra_1_6', '8x128x2', 'params3', 1., 'sharp'),
+    ('sim_extra_1_7', '8x128x2', 'params3', 2., 'sharp'),
+    ('sim_extra_1_8', '8x128x2', 'params3', 5., 'sharp'),
+    ('sim_extra_1_9', '8x128x2', 'params3', 10., 'sharp'),
 
     # configuration for testing the bloom filter size
     ('sim_bloom_filter1_1', '4x32x2', 'params3', .0, 'sharp'),
@@ -224,6 +248,11 @@ TEST_CONFIGS = [
     ('sim_probs1_3', '8x128x2', 'params9', .0, 'sharp'),
     ('sim_probs1_4', '8x128x2', 'params10', .0, 'sharp'),
     ('sim_probs1_5', '8x128x2', 'params11', .0, 'sharp'),
+
+    #
+    ('sim_case_scenario_1', '16x128x2', 'params12', .0, 'sharp'),
+    ('sim_case_scenario_2', '16x128x2', 'params13', .0, 'sharp'),
+
 ]
 
 #
