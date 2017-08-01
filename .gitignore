@@ -19,4 +19,3 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 save_results.sh
-calculate_epsilon.py
