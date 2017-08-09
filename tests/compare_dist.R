@@ -236,6 +236,12 @@ WriteSummary <- function(metrics, outdir) {
   Log('Wrote %s', filename)
 }
 
+WritePlotData <- function(plot_data, outdir) {
+  filename <- file.path(outdir, 'plot_data.csv')
+  write.csv(plot_data, file = filename, row.names = FALSE)
+  Log('Wrote %s', filename)
+}
+
 main <- function(parsed) {
   args <- parsed$args
   options <- parsed$options
@@ -261,6 +267,8 @@ main <- function(parsed) {
 
   WriteSummary(d$metrics, output_dir)
   WritePlot(p, output_dir)
+  WritePlotData(d$plot_data, output_dir)
+
 }
 
 if (is_main) {

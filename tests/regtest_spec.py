@@ -35,11 +35,13 @@ DISTRIBUTIONS = (
 
 DISTRIBUTION_PARAMS = (
     # name, num unique values, num clients, values per client
-    ('tiny', 100, 1000, 1),  # test for insufficient data
+    ('tiny', 100, 10000, 1),  # test for insufficient data
     ('small', 100, 1000000, 1),
     ('medium', 1000, 10000000, 1),
     ('medium2', 100, 10000000, 1),
+    ('medium3', 10000, 10000000, 1),
     ('large', 10000, 100000000, 1),
+
     # Params for testing how varying the number of clients affects the results
     ('clients1', 100, 10000000, 1),
     ('clients2', 100, 1000000, 1),
@@ -74,6 +76,9 @@ DISTRIBUTION_PARAMS = (
     ('unique16', 1000, 10000000, 1),
     ('unique17', 2000, 10000000, 1),
     ('unique18', 5000, 10000000, 1),
+
+    ('cohort', 10000, 10000000, 1),
+
 )
 
 # 'k, h, m' as in params file.
@@ -83,9 +88,10 @@ BLOOMFILTER_PARAMS = {
     '8x128x2': (8, 2, 128),  # 128 cohorts, 8 bits each, 2 bits set in each
     '128x8x2': (128, 2, 8),  # 8 cohorts, 128 bits each, 2 bits set in each
     '32x64x1': (32, 1, 64), # 64 cohorts, 32 bit each, 1 bits set in each
-    '32x2x1': (32, 1, 2), # 1 cohort, 32 bit each, 1 bits set in each
+    '32x2x1': (32, 1, 2), # 2 cohort, 32 bit each, 1 bits set in each
     '32x64x2': (32, 2, 64), # 64 cohorts, 32 bit each, 1 bits set in each
 
+    '10000x200x2': (128, 2, 100), # 64 cohorts, 32 bit each, 1 bits set in each
 
     # params for testing the size of the bloom filter
     '4x32x2': (4, 2, 32),  # 32 cohorts, 4 bits each, 2 bits set in each
@@ -113,27 +119,33 @@ BLOOMFILTER_PARAMS = {
     '8x256x2': (8, 2, 256),
 
     # with different number of hash functions
-    '4x32x4': (4, 4, 32),  # 32 cohorts, 4 bits each, 2 bits set in each
-    '8x32x4': (8, 4, 32),  # 32 cohorts, 8 bits each, 2 bits set in each
-    '16x32x4': (16, 4, 32),  # 32 cohorts, 16 bits each, 2 bits set in each
-    '32x32x4': (32, 4, 32),  # 32 cohorts, 32 bits each, 2 bits set in each
-    '64x32x4': (64, 4, 32),  # 32 cohorts, 64 bits each, 2 bits set in each
-    '128x32x4': (128, 4, 32),  # 32 cohorts, 128 bits each, 2 bits set in each
-    '256x32x4': (256, 4, 32),  # 32 cohorts, 256 bits each, 2 bits set in each
+    '4x32x4': (4, 4, 32),  # 32 cohorts, 4 bits each, 4 bits set in each
+    '8x32x4': (8, 4, 32),  # 32 cohorts, 8 bits each, 4 bits set in each
+    '16x32x4': (16, 4, 32),  # 32 cohorts, 16 bits each, 4 bits set in each
+    '32x32x4': (32, 4, 32),  # 32 cohorts, 32 bits each, 4 bits set in each
+    '64x32x4': (64, 4, 32),  # 32 cohorts, 64 bits each, 4 bits set in each
+    '128x32x4': (128, 4, 32),  # 32 cohorts, 128 bits each, 4 bits set in each
+    '256x32x4': (256, 4, 32),  # 32 cohorts, 256 bits each, 4 bits set in each
     #
-    '4x128x4': (4, 4, 128),  # 128 cohorts, 4 bits each, 2 bits set in each
-    '8x128x4': (8, 4, 128),  # 128 cohorts, 8 bits each, 2 bits set in each
-    '16x128x4': (16, 4, 128),  # 128 cohorts, 16 bits each, 2 bits set in each
-    '32x128x4': (32, 4, 128),  # 128 cohorts, 32 bits each, 2 bits set in each
-    '64x128x4': (64, 4, 128),  # 128 cohorts, 64 bits each, 2 bits set in each
-    '128x128x4': (128, 4, 128),  # 128 cohorts, 128 bits each, 2 bits set in each
-    '256x128x4': (256, 4, 128),  # 128 cohorts, 256 bits each, 2 bits set in each
+    '4x128x4': (4, 4, 128),  # 128 cohorts, 4 bits each, 4 bits set in each
+    '8x128x4': (8, 4, 128),  # 128 cohorts, 8 bits each, 4 bits set in each
+    '16x128x4': (16, 4, 128),  # 128 cohorts, 16 bits each, 4 bits set in each
+    '32x128x4': (32, 4, 128),  # 128 cohorts, 32 bits each, 4 bits set in each
+    '64x128x4': (64, 4, 128),  # 128 cohorts, 64 bits each, 4 bits set in each
+    '128x128x4': (128, 4, 128),  # 128 cohorts, 128 bits each, 4 bits set in each
+    '256x128x4': (256, 4, 128),  # 128 cohorts, 256 bits each, 4 bits set in each
 
     # params for testing the number of hash functions
     '8x128x1' : (8, 1, 128),
     '8x128x4' : (8, 4, 128),
     '8x128x8' : (8, 8, 128),
     '8x128x16' : (8, 16, 128),
+
+    '256x128x1':(256, 1, 128),
+    '256x128x4':(256, 4, 128),
+    '256x128x8':(256, 8, 128),
+    '256x128x16':(256, 16, 128),
+
 }
 
 # 'p, q, f' as in params file.
@@ -160,6 +172,8 @@ PRIVACY_PARAMS = {
     #
     'params12': (0.5, 0.75, 0.75),
     'params13': (0.25, 0.75, 0.5),
+    'params14': (0.35, 0.65, 0.0),
+
 }
 
 # For deriving candidates from true inputs.
@@ -232,6 +246,13 @@ TEST_CONFIGS = [
     ('sim_hash1_4', '8x128x8', 'params6', .0, 'sharp'),
     ('sim_hash1_5', '8x128x16', 'params7', .0, 'sharp'),
 
+
+    ('sim_hash2_1', '256x128x1', 'params3', .0, 'sharp'),
+    ('sim_hash2_2', '256x128x2', 'params4', .0, 'sharp'),
+    ('sim_hash2_3', '256x128x4', 'params5', .0, 'sharp'),
+    ('sim_hash2_4', '256x128x8', 'params6', .0, 'sharp'),
+    ('sim_hash2_5', '256x128x16', 'params7', .0, 'sharp'),
+
     # configuration for testing the number of cohorts
     ('sim_cohort1_1', '8x2x2', 'params3', .0, 'sharp'),
     ('sim_cohort1_2', '8x4x2', 'params3', .0, 'sharp'),
@@ -242,6 +263,14 @@ TEST_CONFIGS = [
     ('sim_cohort1_7', '8x128x2', 'params3', .0, 'sharp'),
     ('sim_cohort1_8', '8x256x2', 'params3', .0, 'sharp'),
 
+    ('sim_cohort2_1', '8x2x2', 'params3', .0, 'sharp'),
+    ('sim_cohort2_2', '8x4x2', 'params3', .0, 'sharp'),
+    ('sim_cohort2_3', '8x8x2', 'params3', .0, 'sharp'),
+    ('sim_cohort2_4', '8x16x2', 'params3', .0, 'sharp'),
+    ('sim_cohort2_5', '8x32x2', 'params3', .0, 'sharp'),
+    ('sim_cohort2_6', '8x64x2', 'params3', .0, 'sharp'),
+    ('sim_cohort2_7', '8x128x2', 'params3', .0, 'sharp'),
+    ('sim_cohort2_8', '8x256x2', 'params3', .0, 'sharp'),
     # configuration for testing different probabilities p, q, f
     ('sim_probs1_1', '8x128x2', 'params3', .0, 'sharp'),
     ('sim_probs1_2', '8x128x2', 'params8', .0, 'sharp'),
@@ -252,6 +281,9 @@ TEST_CONFIGS = [
     #
     ('sim_case_scenario_1', '16x128x2', 'params12', .0, 'sharp'),
     ('sim_case_scenario_2', '16x128x2', 'params13', .0, 'sharp'),
+
+    #
+    ('sim_final', '10000x200x2', 'params14', .0, 'sharp'),
 
 ]
 

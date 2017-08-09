@@ -35,7 +35,7 @@ import os
 import random
 import sys
 import time
-
+from multiprocessing import Pool, Lock               
 import rappor  # client library
 try:
   import fastrand
@@ -43,7 +43,6 @@ except ImportError:
   print >>sys.stderr, (
       "Native fastrand module not imported; see README for speedups")
   fastrand = None
-
 
 def log(msg, *args):
   if args:
@@ -143,7 +142,7 @@ def GenAssocTestdata(params1, params2, irr_rand, assoc_testdata_count,
       irr2_str = rappor.bit_string(irr2, params2.num_bloombits)
 
       csv_out.writerow((client_str, cohort, irr1_str, irr2_str))
-
+      print "NEVER"
       report_index += 1
 
 
@@ -155,7 +154,10 @@ def RapporClientSim(params, irr_rand, csv_in, csv_out, max_lines):
   # TODO: It would be more instructive/efficient to construct an encoder
   # instance up front per client, rather than one per row below.
   start_time = time.time()
-
+  lock = Lock()
+  poolsize = 8
+  pool = Pool(processes=poolsize, initializer=init, initargs=(lock,))
+  args = []
   for i, (client_str, cohort_str, true_value) in enumerate(csv_in):
     if i > max_lines:
       break
@@ -178,6 +180,22 @@ def RapporClientSim(params, irr_rand, csv_in, csv_out, max_lines):
 
     cohort = int(cohort_str)
     secret = client_str
+    args.append((params, cohort, secret, irr_rand, true_value))
+
+  rows = pool.map(create_report, args)
+  for r in rows:
+    csv_out.writerow(r)
+  
+
+
+
+def create_report(input):
+    params = input[0]
+    cohort = input[1]
+    secret = input[2]
+    irr_rand = input[3]
+    true_value = input[4]
+    #csv_out = input[4]
     e = rappor.Encoder(params, cohort, secret, irr_rand)
 
     # Real users should call e.encode().  For testing purposes, we also want
@@ -188,9 +206,18 @@ def RapporClientSim(params, irr_rand, csv_in, csv_out, max_lines):
     prr_str = rappor.bit_string(prr, params.num_bloombits)
     irr_str = rappor.bit_string(irr, params.num_bloombits)
 
-    out_row = (client_str, cohort_str, bloom_str, prr_str, irr_str)
-    csv_out.writerow(out_row)
+    #with lock:
+    #  out_row = (secret, str(cohort), bloom_str, prr_str, irr_str)
+    #  csv_out.writerow(out_row)
+    out_row = (secret, str(cohort), bloom_str, prr_str, irr_str)
+    return out_row
+   
+    #return out_row
 
+
+def init(l):
+    global lock
+    lock = l
 
 def main(argv):
   (opts, argv) = CreateOptionsParser().parse_args(argv)
@@ -212,7 +239,7 @@ def main(argv):
   if opts.random_mode == 'simple':
     irr_rand = rappor.SecureIrrRand(params)
   elif opts.random_mode == 'fast':
-    if fastrand:
+    if False:
       log('Using fastrand extension')
       # NOTE: This doesn't take 'rand'.  It's seeded in C with srand().
       irr_rand = fastrand.FastIrrRand(params)
@@ -228,6 +255,7 @@ def main(argv):
   #   - or srand(0) might do it.
 
   csv_in = csv.reader(sys.stdin)
+  global csv_out
   csv_out = csv.writer(sys.stdout)
 
   if opts.assoc_testdata:

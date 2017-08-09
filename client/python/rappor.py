@@ -26,6 +26,7 @@ import json
 import struct
 import sys
 import os
+import math
 
 from random import SystemRandom
 from hmac_drbg import HMAC_DRBG
@@ -198,8 +199,15 @@ def get_prr_masks(secret, word, prob_f, num_bits):
   #log('word %s, secret %s, HMAC-SHA256 %s', word, secret, h.hexdigest())
 
   # Now go through each byte
-  digest_bytes = h.generate(num_bits)
-  assert len(digest_bytes) == num_bits
+  digest_bytes = []
+  iters = int(math.ceil(num_bits / 900.))
+  for i in range(iters):
+    if i == iters - 1:
+      digest_bytes += h.generate(num_bits % 900)
+    else:
+      digest_bytes += h.generate(900)
+
+  #assert len(digest_bytes) == num_bits
 
   # Use 32 bits.  If we want 64 bits, it may be fine to generate another 32
   # bytes by repeated HMAC.  For arbitrary numbers of bytes it's probably
