@@ -100,16 +100,10 @@ Directory Structure
 
     analysis/
       R/                 # R code for analysis
-      cpp/               # Fast reimplementations of certain analysis
-                         #   algorithms
-    apps/                # Web apps to help you use RAPPOR (using Shiny)
     bin/                 # Command line tools for analysis.
     client/              # Client libraries
       python/            # Python client library
         rappor.py
-        ...
-      cpp/               # C++ client library
-        encoder.cc
         ...
     doc/                 # Documentation
     tests/               # Tools for regression tests
@@ -123,10 +117,9 @@ Directory Structure
     demo.sh              # Quick demonstration
     docs.sh              # Generate docs form the markdown in doc/
     gh-pages/            # Where generated docs go. (A subtree of the branch gh-pages)
-    pipeline/            # Analysis pipeline code.
     regtest.sh           # End-to-end regression tests, including client
                          #  libraries and analysis
-    setup.sh             # Install dependencies (for Linux)
+    setup.sh             # Install dependencies (for MacOS)
     test.sh              # Test runner
 
 Documentation
