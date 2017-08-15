@@ -37,6 +37,8 @@ DISTRIBUTION_PARAMS = (
     # name, num unique values, num clients, values per client
     ('tiny', 100, 10000, 1),  # test for insufficient data
     ('small', 100, 1000000, 1),
+    ('small2', 10000, 1000000, 1),
+    ('small3', 10, 1000000, 1),
     ('medium', 1000, 10000000, 1),
     ('medium2', 100, 10000000, 1),
     ('medium3', 10000, 10000000, 1),
@@ -91,7 +93,7 @@ BLOOMFILTER_PARAMS = {
     '32x2x1': (32, 1, 2), # 2 cohort, 32 bit each, 1 bits set in each
     '32x64x2': (32, 2, 64), # 64 cohorts, 32 bit each, 1 bits set in each
 
-    '10000x200x2': (128, 2, 100), # 64 cohorts, 32 bit each, 1 bits set in each
+    '128x100x2': (128, 2, 100), # 100 cohorts, 128 bit each, 2 bits set in each
 
     # params for testing the size of the bloom filter
     '4x32x2': (4, 2, 32),  # 32 cohorts, 4 bits each, 2 bits set in each
@@ -283,7 +285,7 @@ TEST_CONFIGS = [
     ('sim_case_scenario_2', '16x128x2', 'params13', .0, 'sharp'),
 
     #
-    ('sim_final', '10000x200x2', 'params14', .0, 'sharp'),
+    ('sim_final', '128x100x2', 'params14', .0, 'sharp'),
 
 ]
 

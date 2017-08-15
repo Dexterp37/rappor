@@ -167,7 +167,7 @@ _run-one-instance() {
     < $case_dir/spec.txt
 
   local instance_dir=$case_dir/$test_instance
-  #mkdir -p $instance_dir
+  mkdir -p $instance_dir
 
   banner "Generating reports (gen_reports.R)"
 
