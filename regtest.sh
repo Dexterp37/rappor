@@ -67,6 +67,127 @@ more-candidates() {
   seq $begin $end | awk '{print "v" $1}'
 }
 
+_gen-values() {
+  local spec_gen=$1
+  local spec_regex="$2"  # grep -E format on the spec, can be empty
+  local parallel=$3
+  local impl=${4:-"python"}
+  local instances=${5:-1}
+
+  local regtest_dir=$REGTEST_BASE_DIR/$impl
+  rm -rf $regtest_dir
+  
+  mkdir -p $regtest_dir
+
+  local func
+  local processors
+
+  func=_gen_true_values
+  processors=1
+
+  local cases_list=$regtest_dir/test-cases.txt
+  # Need -- for regexes that start with -
+  $spec_gen | grep -E -- "$spec_regex" > $cases_list
+
+  # Generate parameters for all test cases.
+  cat $cases_list \
+    | xargs -L 1 -P $processors -- $0 _setup-one-case $impl \
+    || test-error
+
+  log "Done generating parameters for all test cases"
+
+  local instances_list=$regtest_dir/test-instances.txt
+  _setup-test-instances $instances $impl < $cases_list > $instances_list 
+
+  cat $instances_list \
+    | xargs -L 1 -P $processors -- $0 $func || test-error
+
+}
+
+_gen_true_values() {
+  local test_case=$1
+  local test_instance=$2
+  local impl=$3
+
+  local case_dir=$REGTEST_BASE_DIR/$impl/$test_case
+  
+  read -r \
+    case_name distr num_unique_values num_clients values_per_client \
+    num_bits num_hashes num_cohorts p q f \
+    num_additional to_remove \
+    < $case_dir/spec.txt
+
+  local instance_dir=$case_dir/$test_instance
+  mkdir -p $instance_dir
+
+  banner "Generating reports (gen_reports.R)"
+
+  # the TRUE_VALUES_PATH environment variable can be used to avoid
+  # generating new values every time.  NOTE: You are responsible for making
+  # sure the params match!
+  local true_values=${TRUE_VALUES_PATH:-$instance_dir/case_true_values.csv}
+  if [ ! -f $true_values ]; then
+    tests/gen_true_values.R $distr $num_unique_values $num_clients \
+                            $values_per_client $num_cohorts \
+                            $true_values
+
+    # TEMP hack: Make it visible to plot.
+    # TODO: Fix compare_dist.R
+    if [ ! -f $instance_dir/case_true_values.csv ]; then
+      ln -s -f \
+      $PWD/$true_values \
+      $instance_dir/case_true_values.csv
+    fi
+  else
+    # TEMP hack: Make it visible to plot.
+    # TODO: Fix compare_dist.R
+    if [ ! -f $instance_dir/case_true_values.csv ]; then
+      ln -s -f \
+      $PWD/$true_values \
+      $instance_dir/case_true_values.csv
+    fi
+  fi
+}
+
+analysis() {
+  local test_case=$1 # r-zipf1.5-tiny2-sim_final
+  local test_instance=$2 # 1
+  local impl=$3 # python
+
+  local regtest_dir=$REGTEST_BASE_DIR/$impl
+  local case_dir=$REGTEST_BASE_DIR/$impl/$test_case
+  local instance_dir=$case_dir/$test_instance
+
+
+  banner "Summing RAPPOR IRR bits to get 'counts'"
+
+  bin/sum_bits.py \
+    $case_dir/case_params.csv \
+    < $instance_dir/case_reports.csv \
+    > $instance_dir/case_counts.csv
+
+  local out_dir=${instance_dir}_report
+  mkdir -p $out_dir
+
+  read -r \
+    case_name distr num_unique_values num_clients values_per_client \
+    num_bits num_hashes num_cohorts p q f \
+    num_additional to_remove \
+    < $case_dir/spec.txt
+
+  # Currently, the summary file shows and aggregates timing of the inference
+  # engine, which excludes R's loading time and reading of the (possibly 
+  # substantial) map file. Timing below is more inclusive.
+  TIMEFORMAT='Running compare_dist.R took %R seconds'
+  time {
+    # Input prefix, output dir
+    tests/compare_dist.R -t "Test case: $test_case (instance $test_instance)" \
+                         "$case_dir/case" "$instance_dir/case" $out_dir $num_clients $values_per_client
+  }
+
+  make-summary $regtest_dir $impl
+}
+
 # Args:
 #   unique_values: File of unique true values
 #   last_true: last true input, e.g. 50 if we generated "v1" .. "v50".
@@ -387,6 +508,14 @@ _run-tests() {
 # used for most tests
 readonly REGTEST_SPEC=tests/regtest_spec.py
 
+gen-values() {
+  local spec_regex=${1:-'^r-'}  # grep -E format on the spec
+  local instances=${2:-1}
+  shift
+
+  time _gen-values $REGTEST_SPEC $spec_regex F python $instances
+}
+
 # Run tests sequentially.  NOTE: called by demo.sh.
 run-seq() {
   local spec_regex=${1:-'^r-'}  # grep -E format on the spec
@@ -455,8 +584,7 @@ compare-python-cpp() {
 #
 sim-python-clients(){
   local true_values=$REGTEST_BASE_DIR/python/stable_true_values.csv
-  local instances=${2:-1}  
-
+  local instances=${2:-1}
 
   TRUE_VALUES_PATH=$true_values \
     ./regtest.sh run-seq '^'$1 python $instances
