@@ -1,6 +1,8 @@
 RAPPOR
 ======
 
+**Context** - *This is a research prototype was modified as part of an internship project. See the Mozilla Governance [thread](https://groups.google.com/forum/#!msg/mozilla.governance/81gMQeMEL0w/diyeJRFxAgAJ) for context. The differences between this fork and upstream are described in [bug 1379189](https://bugzilla.mozilla.org/show_bug.cgi?id=1379189) and [bug 1391664](https://bugzilla.mozilla.org/show_bug.cgi?id=1391664).*
+
 RAPPOR is a novel privacy technology that allows inferring statistics about
 populations while preserving the privacy of individual users.
 
